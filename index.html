@@ -1,1 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InBarber - Agendamento</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #0a0a0c; color: #f3f4f6; font-family: system-ui, -apple-system, sans-serif; }
+    .bg-card { background-color: #121215; border: 1px solid #222228; }
+  </style>
+</head>
+<body class="min-h-screen pb-12">
+  <!-- Topo da Marca (Emblema Branco) -->
+  <header class="border-b border-gray-800 bg-black/50 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center font-bold text-black text-sm">IB</div>
+        <span class="font-bold tracking-wide text-sm text-white">INBARBER</span>
+      </div>
+      <div id="gestor-badge" class="hidden">
+        <span class="text-xs bg-white/10 text-white border border-white/20 px-2 py-1 rounded font-bold uppercase">Painel Gestor</span>
+      </div>
+    </div>
+  </header>
 
+  <main class="max-w-md mx-auto px-4 pt-6" id="app-content">
+    <!-- Conteúdo Dinâmico -->
+  </main>
+
+  <script>
+    const SUPABASE_URL = "https://totwzrffyoiwlqzqxnjk.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_WTWvqYi4K8L4Iv7Vp0mh-w_mMWMAfqo";
+    
+    let _supabase = null;
+    try {
+      if (typeof supabase !== 'undefined' && supabase.createClient) {
+        _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      }
+    } catch(e) {
+      console.error("Erro ao inicializar Supabase:", e);
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentMode = urlParams.get('modo') === 'gestor' ? 'gestor' : 'client';
+
+    let selectedBarber = 'barbeiro';
+    let selectedServices = [];
+    let selectedDate = new Date().toISOString().split('T')[0];
+    let selectedTime = null;
+
+    // Apenas 1 barbeiro homem configurado
+    const barbeiros = [
+      { id: 'barbeiro', nome: 'Barbeiro', cargo: 'Master Barber', foto: 'https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=150' }
+    ];
+
+    const servicosCatalog = [
+      { id: 'corte_social', nome: 'Corte social', preco: 40, tempo: 20 },
+      { id: 'corte_degrade_maquina', nome: 'Corte degrade máquina', preco: 40, tempo: 20 },
+      { id: 'corte_degrade_navalhado', nome: 'Corte degrade navalhado', preco: 45, tempo: 25 },
+      { id: 'corte_degrade_shaver', nome: 'Corte degrade shaver', preco: 45, tempo: 30 },
+      { id: 'barba_normal', nome: 'Barba normal', preco: 30, tempo: 20 },
+      { id: 'barba_toalha_quente', nome: 'Barba toalha quente', preco: 35, tempo: 25 },
+      { id: 'sobrancelha', nome: 'Sobrancelha', preco: 20, tempo: 5 },
+      { id: 'bigode', nome: 'Bigode', preco: 20, tempo: 5 },
+      { id: 'cavanhaque', nome: 'Cavanhaque', preco: 20, tempo: 5 },
+      { id: 'pigmentacao_cabelo', nome: 'Pigmentação cabelo', preco: 35, tempo: 40 },
+      { id: 'pigmentacao_barba', nome: 'Pigmentação barba', preco: 25, tempo: 40 },
+      { id: 'pigmentacao_sobrancelha', nome: 'Pigmentação sobrancelha', preco: 20, tempo: 10 },
+      { id: 'luzes', nome: 'Luzes', preco: 150, tempo: 120 },
+      { id: 'platinado', nome: 'Platinado', preco: 200, tempo: 150 }
+    ];
+
+    function init() {
+      if (currentMode === 'gestor') {
+        const badge = document.getElementById('gestor-badge');
+        if (badge) badge.classList.remove('hidden');
+      }
+      render();
+    }
+
+    function render() {
+      const container = document.getElementById('app-content');
+      if (!container) return;
+
+      if (currentMode === 'client') {
+        container.innerHTML = `
+          <div class="space-y-6">
+            <div>
+              <h2 class="text-xl font-bold text-white">Agende seu horário</h2>
+              <p class="text-xs text-gray-400">Escolha o profissional e os serviços desejados</p>
+            </div>
+
+            <!-- Barbeiros -->
+            <div class="space-y-2">
+              <label class="text-xs font-semibold uppercase tracking-wider text-white">1. Profissional</label>
+              <div class="grid grid-cols-1 gap-3">
+                ${barbeiros.map(b => `
+                  <div onclick="selectBarber('${b.id}')" class="p-3 rounded-xl bg-card border ${selectedBarber === b.id ? 'border-white bg-white/10' : 'border-gray-800'} cursor-pointer flex items-center gap-3 transition-all">
+                    <img src="${b.foto}" class="w-12 h-12 rounded-full object-cover">
+                    <div>
+                      <p class="text-sm font-bold text-white">${b.nome}</p>
+                      <p class="text-xs text-gray-400">${b.cargo}</p>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Serviços -->
+            <div class="space-y-2">
+              <label class="text-xs font-semibold uppercase tracking-wider text-white">2. Serviços</label>
+              <div class="space-y-2 max-h-72 overflow-y-auto pr-1">
+                ${servicosCatalog.map(s => {
+                  const isSel = selectedServices.includes(s.id);
+                  return `
+                    <div onclick="toggleService('${s.id}')" class="p-3 rounded-xl bg-card border ${isSel ? 'border-white bg-white/10' : 'border-gray-800'} cursor-pointer flex justify-between items-center transition-all">
+                      <div>
+                        <p class="text-sm font-semibold text-white">${s.nome}</p>
+                        <p class="text-xs text-gray-400">${s.tempo} min • R$ ${s.preco},00</p>
+                      </div>
+                      <i class="fa-solid ${isSel ? 'fa-circle-check text-white' : 'fa-circle text-gray-700'}"></i>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+
+            <!-- Horários livres -->
+            <div class="space-y-2">
+              <label class="text-xs font-semibold uppercase tracking-wider text-white">3. Horário Disponível</label>
+              <div class="grid grid-cols-4 gap-2" id="slots-container">
+                <p class="col-span-4 text-xs text-gray-500">Carregando horários...</p>
+              </div>
+            </div>
+
+            <!-- Formulário de confirmação -->
+            <div class="space-y-3 pt-2">
+              <input type="text" id="cust-name" placeholder="Seu Nome Completo" class="w-full bg-card border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-white outline-none">
+              <input type="tel" id="cust-phone" placeholder="WhatsApp (DDD + Número)" class="w-full bg-card border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-white outline-none">
+              <button onclick="confirmBooking()" class="w-full py-4 rounded-xl bg-white text-black font-bold text-sm uppercase tracking-wider shadow-lg hover:bg-gray-200 transition-all">Confirmar Agendamento</button>
+            </div>
+          </div>
+        `;
+        loadAvailableSlots();
+      } else {
+        container.innerHTML = `
+          <div class="space-y-4">
+            <h2 class="text-xl font-bold text-white">Painel do Gestor</h2>
+            <div class="bg-card p-4 rounded-xl border border-gray-800">
+              <p class="text-xs text-gray-400">Agendamentos Gravados no Supabase</p>
+            </div>
+            <div id="gestor-list" class="space-y-2">Carregando agendamentos...</div>
+          </div>
+        `;
+        loadGestorData();
+      }
+    }
+
+    function selectBarber(id) {
+      selectedBarber = id;
+      render();
+    }
+
+    function toggleService(id) {
+      if (selectedServices.includes(id)) {
+        selectedServices = selectedServices.filter(x => x !== id);
+      } else {
+        selectedServices.push(id);
+      }
+      render();
+    }
+
+    async function loadAvailableSlots() {
+      const allSlots = ["09:00", "09:45", "10:30", "11:15", "13:00", "13:45", "14:30", "15:15", "16:00", "16:45", "17:30"];
+      let occupied = [];
+
+      if (_supabase) {
+        try {
+          const { data: agendamentos, error } = await _supabase
+            .from('agendamentos')
+            .select('horario')
+            .eq('barbeiro_id', selectedBarber)
+            .eq('data', selectedDate)
+            .neq('status', 'cancelado');
+            
+          if (!error && agendamentos) {
+            occupied = agendamentos.map(a => a.horario);
+          }
+        } catch(err) {
+          console.warn("Consulta Supabase indisponível:", err);
+        }
+      }
+
+      const free = allSlots.filter(s => !occupied.includes(s));
+      const container = document.getElementById('slots-container');
+      if (!container) return;
+
+      container.innerHTML = free.map(s => `
+        <button onclick="selectTime('${s}')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border ${selectedTime === s ? 'border-white bg-white text-black' : 'border-gray-800 text-gray-300'}">${s}</button>
+      `).join('');
+    }
+
+    function selectTime(s) {
+      selectedTime = s;
+      document.querySelectorAll('.slot-btn').forEach(btn => {
+        if(btn.innerText.trim() === s) {
+          btn.className = "slot-btn py-2 rounded-lg text-xs font-semibold bg-white text-black border border-white";
+        } else {
+          btn.className = "slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300";
+        }
+      });
+    }
+
+    async function confirmBooking() {
+      const nameInput = document.getElementById('cust-name');
+      const phoneInput = document.getElementById('cust-phone');
+      
+      const name = nameInput ? nameInput.value : '';
+      const phone = phoneInput ? phoneInput.value : '';
+
+      if (!name || !phone || !selectedTime || selectedServices.length === 0) {
+        alert('Por favor, preencha todos os campos e selecione ao menos um serviço e horário.');
+        return;
+      }
+
+      const totalValue = selectedServices.reduce((acc, curr) => {
+        const item = servicosCatalog.find(s => s.id === curr);
+        return acc + (item ? item.preco : 0);
+      }, 0);
+
+      if (_supabase) {
+        try {
+          const { error } = await _supabase.from('agendamentos').insert([{
+            cliente_nome: name,
+            cliente_whatsapp: phone,
+            barbeiro_id: selectedBarber,
+            servicos: selectedServices,
+            data: selectedDate,
+            horario: selectedTime,
+            valor_total: totalValue,
+            status: 'confirmado'
+          }]);
+
+          if (error) {
+            alert('Aviso do Supabase: ' + error.message);
+            return;
+          }
+        } catch(err) {
+          console.error("Erro ao salvar:", err);
+        }
+      }
+
+      alert('Agendamento realizado com sucesso!');
+      selectedServices = [];
+      selectedTime = null;
+      render();
+    }
+
+    async function loadGestorData() {
+      const container = document.getElementById('gestor-list');
+      if (!container) return;
+
+      if (!_supabase) {
+        container.innerHTML = `<p class="text-xs text-gray-500">Supabase não conectado.</p>`;
+        return;
+      }
+
+      try {
+        const { data, error } = await _supabase.from('agendamentos').select('*').order('created_at', { ascending: false });
+
+        if (error || !data || data.length === 0) {
+          container.innerHTML = `<p class="text-xs text-gray-500">Nenhum agendamento encontrado.</p>`;
+          return;
+        }
+
+        container.innerHTML = data.map(a => `
+          <div class="p-3 bg-card rounded-xl border border-gray-800 flex justify-between items-center">
+            <div>
+              <p class="text-sm font-bold text-white">${a.cliente_nome} (${a.horario})</p>
+              <p class="text-xs text-gray-400">R$ ${a.valor_total},00 • ${a.cliente_whatsapp}</p>
+            </div>
+            <span class="text-[10px] px-2 py-1 rounded bg-white/10 text-white border border-white/20 uppercase font-bold">${a.status}</span>
+          </div>
+        `).join('');
+      } catch(err) {
+        container.innerHTML = `<p class="text-xs text-gray-500">Erro ao carregar dados do gestor.</p>`;
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
