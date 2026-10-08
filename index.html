@@ -49,6 +49,13 @@
           </div>
         </div>
 
+        <!-- Configuração de Webhook do WhatsApp (Bot Automático) -->
+        <div class="bg-black/50 p-3 rounded-xl border border-gray-800 space-y-2">
+          <p class="text-xs font-bold text-white">Webhook / API do WhatsApp</p>
+          <input type="text" id="webhook-url-input" placeholder="URL da API (ex: https://...)" class="w-full bg-card border border-gray-800 rounded-lg px-2.5 py-1.5 text-xs text-gray-300 outline-none">
+          <button onclick="saveWebhookUrl()" class="w-full py-1.5 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold rounded-lg hover:bg-emerald-600/30">Salvar API</button>
+        </div>
+
         <!-- Gerenciar Serviços -->
         <div class="space-y-3">
           <p class="text-xs font-bold text-white uppercase tracking-wider">Gerenciar Serviços</p>
@@ -113,12 +120,4 @@
               <i class="fa-solid fa-circle text-gray-700 srv-icon"></i>
             </div>
             <div onclick="toggleService('sobrancelha')" id="srv-sobrancelha" class="srv-card p-3 rounded-xl bg-card border border-gray-800 cursor-pointer flex justify-between items-center transition-all">
-              <div><p class="text-sm font-semibold text-white">Sobrancelha</p><p class="text-xs text-gray-400">5 min • R$ 20,00</p></div>
-              <i class="fa-solid fa-circle text-gray-700 srv-icon"></i>
-            </div>
-            <div onclick="toggleService('luzes')" id="srv-luzes" class="srv-card p-3 rounded-xl bg-card border border-gray-800 cursor-pointer flex justify-between items-center transition-all">
-              <div><p class="text-sm font-semibold text-white">Luzes</p><p class="text-xs text-gray-400">120 min • R$ 150,00</p></div>
-              <i class="fa-solid fa-circle text-gray-700 srv-icon"></i>
-            </div>
-            <div onclick="toggleService('platinado')" id="srv-platinado" class="srv-card p-3 rounded-xl bg-card border border-gray-800 cursor-pointer flex justify-between items-center transition-all">
-              <div><p class="text-
+              <div><p class="text-sm font-semibold text-white">Sobrancelha</p><p class="text
