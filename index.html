@@ -1,1 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InBarber - Sistema de Agendamento</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #0a0a0c; color: #f3f4f6; font-family: system-ui, -apple-system, sans-serif; }
+    .bg-card { background-color: #121215; border: 1px solid #222228; }
+  </style>
+</head>
+<body class="min-h-screen pb-16 flex flex-col justify-between">
+  <div>
+    <!-- Topo da Marca -->
+    <header class="border-b border-gray-800 bg-black/50 backdrop-blur sticky top-0 z-50">
+      <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="switchMode('client')">
+          <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center font-bold text-black text-sm">IB</div>
+          <span class="font-bold tracking-wide text-sm text-white">INBARBER</span>
+        </div>
+        <div id="gestor-badge" class="hidden flex items-center gap-2">
+          <span class="text-xs bg-white/10 text-white border border-white/20 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">Painel Gestor</span>
+          <button onclick="logoutGestor()" class="text-xs text-gray-400 hover:text-white transition-all"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+        </div>
+      </div>
+    </header>
 
+    <main class="max-w-md mx-auto px-4 pt-6" id="app-content">
+      <!-- Conteúdo Dinâmico -->
+    </main>
+  </div>
+
+  <!-- Rodapé / Acesso ao Barbeiro -->
+  <footer class="max-w-md mx-auto w-full px-4 py-4 text-center border-t border-gray-900 mt-8">
+    <button id="footer-btn" onclick="requestGestorAccess()" class="text-xs text-gray-500 hover:text-gray-300 transition-all flex items-center justify-center gap-1.5 mx-auto">
+      <i class="fa-solid fa-lock text-[10px]"></i> Área do Barbeiro
+    </button>
+  </footer>
+
+  <script>
+    const SUPABASE_URL = "https://totwzrffyoiwlqzqxnjk.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_WTWvqYi4K8L4Iv7Vp0mh-w_mMWMAfqo";
+    const GESTOR_PIN = "1234";
+    
+    let _supabase = null;
+    try {
+      if (typeof supabase !== 'undefined' && supabase.createClient) {
+        _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      }
+    } catch(e) {
+      console.error("Erro ao inicializar Supabase:", e);
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    let currentMode = urlParams.get('modo') === 'gestor' ? 'gestor' : 'client';
+
+    let selectedBarber = 'barbeiro';
+    let selectedServices = [];
+    let selectedDate = new Date().toISOString().split('T')[0];
+    let selectedTime = null;
+
+    let gestorFilterDate = new Date().toISOString().split('T')[0];
+
+    const barbeiros = [
+      { id: 'barbeiro', nome: 'Barbeiro Principal', cargo: 'Master Barber', foto: 'https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=150' }
+    ];
+
+    const servicosCatalog = [
+      { id: 'corte_social', nome: 'Corte social', preco: 40, tempo: 20 },
+      { id: 'corte_degrade_maquina', nome: 'Corte degrade máquina', preco: 40, tempo: 20 },
+      { id: 'corte_degrade_navalhado', nome: 'Corte degrade navalhado', preco: 45, tempo: 25 },
+      { id: 'corte_degrade_shaver', nome: 'Corte degrade shaver', preco: 45, tempo: 30 },
+      { id: 'barba_normal', nome: 'Barba normal', preco: 30, tempo: 20 },
+      { id: 'barba_toalha_quente', nome: 'Barba toalha quente', preco: 35, tempo: 25 },
+      { id: 'sobrancelha', nome: 'Sobrancelha', preco: 20, tempo: 5 },
+      { id: 'bigode', nome: 'Bigode', preco: 20, tempo: 5 },
+      { id: 'cavanhaque', nome: 'Cavanhaque', preco: 20, tempo: 5 },
+      { id: 'pigmentacao_cabelo', nome: 'Pigmentação cabelo', preco: 35, tempo: 40 },
+      { id: 'pigmentacao_barba', nome: 'Pigmentação barba', preco: 25, tempo: 40 },
+      { id: 'pigmentacao_sobrancelha', nome: 'Pigmentação sobrancelha', preco: 20, tempo: 10 },
+      { id: 'luzes', nome: 'Luzes', preco: 150, tempo: 120 },
+      { id: 'platinado', nome: 'Platinado', preco: 200, tempo: 150 }
+    ];
+
+    const allSlots = [
+      "09:00", "09:45", "10:45", "11:45", 
+      "13:00", "13:45", "14:45", "15:45", 
+      "16:45", "17:45", "18:45", "19:45", 
+      "20:45", "21:30", "22:00"
+    ];
+
+    // Gerar dias do mês (01 ao 31) para a grade
+    function getFullMonthDays() {
+      const days = [];
+      const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = today.getMonth();
+
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const d = new Date(year, month, day);
+        const dayFormatted = day < 10 ? '0' + day : day;
+        const monthFormatted = (month + 1) < 10 ? '0' + (month + 1) : (month + 1);
+        const isoDate = `${year}-${monthFormatted}-${dayFormatted}`;
+        const dayName = daysOfWeek[d.getDay()];
+
+        days.push({
+          dateIso: isoDate,
+          labelDay: dayName,
+          labelNum: `${dayFormatted}/${monthFormatted}`
+        });
+      }
+      return days;
+    }
+
+    function init() {
+      updateHeaderBadge();
+      render();
+    }
+
+    function updateHeaderBadge() {
+      const badge = document.getElementById('gestor-badge');
+      const footerBtn = document.getElementById('footer-btn');
+      if (currentMode === 'gestor') {
+        if (badge) badge.classList.remove('hidden');
+        if (footerBtn) footerBtn.classList.add('hidden');
+      } else {
+        if (badge) badge.classList.add('hidden');
+        if (footerBtn) footerBtn.classList.remove('hidden');
+      }
+    }
+
+    function requestGestorAccess() {
+      const pin = prompt("Digite a senha do barbeiro:");
+      if (pin === GESTOR_PIN) {
+        currentMode = 'gestor';
+        updateHeaderBadge();
+        render();
+      } else if (pin !== null) {
+        alert("Senha incorreta!");
+      }
+    }
+
+    function logoutGestor() {
+      currentMode = 'client';
+      updateHeaderBadge();
+      render();
+    }
+
+    function
