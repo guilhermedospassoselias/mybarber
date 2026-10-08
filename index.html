@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -32,7 +31,7 @@
     </header>
 
     <main class="max-w-md mx-auto px-4 pt-6">
-      <!-- MODO CLIENTE (Estático no HTML para garantir o carregamento) -->
+      <!-- MODO CLIENTE -->
       <div id="view-client" class="space-y-6">
         <div>
           <h2 class="text-xl font-bold text-white">Agende seu horário</h2>
@@ -173,7 +172,6 @@
     ];
 
     function initClientUI() {
-      // Renderizar Serviços
       const sContainer = document.getElementById('services-list');
       if (sContainer) {
         sContainer.innerHTML = servicosCatalog.map(s => `
@@ -187,7 +185,6 @@
         `).join('');
       }
 
-      // Renderizar Dias (01 ao 31)
       const dContainer = document.getElementById('days-grid');
       if (dContainer) {
         const days = getFullMonthDays();
@@ -233,4 +230,208 @@
         const icon = el.querySelector('.id-icon');
         if (selectedServices.includes(s.id)) {
           el.className = "p-3 rounded-xl bg-card border border-white bg-white/10 cursor-pointer flex justify-between items-center transition-all";
-          if (icon) icon.className = "fa-solid fa-circle-check text-white id-icon
+          if (icon) icon.className = "fa-solid fa-circle-check text-white id-icon";
+        } else {
+          el.className = "p-3 rounded-xl bg-card border border-gray-800 cursor-pointer flex justify-between items-center transition-all";
+          if (icon) icon.className = "fa-solid fa-circle text-gray-700 id-icon";
+        }
+      });
+    }
+
+    function selectDate(dateIso) {
+      selectedDate = dateIso;
+      selectedTime = null;
+
+      const days = getFullMonthDays();
+      days.forEach(d => {
+        const el = document.getElementById(`day-${d.dateIso}`);
+        if (!el) return;
+        if (d.dateIso === dateIso) {
+          el.className = "p-2 rounded-xl bg-card border border-white bg-white text-black text-center cursor-pointer transition-all";
+        } else {
+          el.className = "p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center cursor-pointer transition-all";
+        }
+      });
+
+      loadAvailableSlots();
+    }
+
+    async function loadAvailableSlots() {
+      let occupied = [];
+      if (_supabase) {
+        try {
+          const { data } = await _supabase.from('agendamentos').select('horario').eq('data', selectedDate).neq('status', 'cancelado');
+          if (data) occupied = data.map(a => a.horario);
+        } catch(e){}
+      }
+
+      const free = allSlots.filter(s => !occupied.includes(s));
+      const container = document.getElementById('slots-container');
+      if (!container) return;
+
+      if (free.length === 0) {
+        container.innerHTML = `<p class="col-span-4 text-xs text-gray-500 py-2">Nenhum horário disponível nesta data.</p>`;
+        return;
+      }
+
+      container.innerHTML = free.map(s => `
+        <button onclick="selectTime('${s}')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border ${selectedTime === s ? 'border-white bg-white text-black' : 'border-gray-800 text-gray-300'}">${s}</button>
+      `).join('');
+    }
+
+    function selectTime(s) {
+      selectedTime = s;
+      document.querySelectorAll('.slot-btn').forEach(btn => {
+        if(btn.innerText.trim() === s) {
+          btn.className = "slot-btn py-2 rounded-lg text-xs font-semibold bg-white text-black border border-white";
+        } else {
+          btn.className = "slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300";
+        }
+      });
+    }
+
+    async function confirmBooking() {
+      const name = document.getElementById('cust-name')?.value.trim();
+      const phone = document.getElementById('cust-phone')?.value.trim();
+
+      if (!name || !phone || !selectedTime || selectedServices.length === 0) {
+        alert('Por favor, preencha nome, WhatsApp e selecione ao menos um serviço, dia e horário.');
+        return;
+      }
+
+      const totalValue = selectedServices.reduce((acc, curr) => {
+        const item = servicosCatalog.find(s => s.id === curr);
+        return acc + (item ? item.preco : 0);
+      }, 0);
+
+      if (_supabase) {
+        try {
+          const { error } = await _supabase.from('agendamentos').insert([{
+            cliente_nome: name, cliente_whatsapp: phone, barbeiro_id: 'barbeiro',
+            servicos: selectedServices, data: selectedDate, horario: selectedTime,
+            valor_total: totalValue, status: 'confirmado'
+          }]);
+
+          if (error) { alert('Erro: ' + error.message); return; }
+        } catch(e){}
+      }
+
+      alert('Agendamento realizado com sucesso!');
+      selectedServices = [];
+      selectedTime = null;
+      initClientUI();
+    }
+
+    function switchMode(mode) {
+      const clientView = document.getElementById('view-client');
+      const gestorView = document.getElementById('view-gestor');
+      const badge = document.getElementById('gestor-badge');
+      const footerBtn = document.getElementById('footer-btn');
+
+      if (mode === 'gestor') {
+        clientView.classList.add('hidden');
+        gestorView.classList.remove('hidden');
+        badge.classList.remove('hidden');
+        footerBtn.classList.add('hidden');
+        document.getElementById('gestor-date-input').value = gestorFilterDate;
+        loadGestorData();
+      } else {
+        clientView.classList.remove('hidden');
+        gestorView.classList.add('hidden');
+        badge.classList.add('hidden');
+        footerBtn.classList.remove('hidden');
+      }
+    }
+
+    function requestGestorAccess() {
+      const pin = prompt("Digite a senha do barbeiro:");
+      if (pin === GESTOR_PIN) switchMode('gestor');
+      else if (pin !== null) alert("Senha incorreta!");
+    }
+
+    function logoutGestor() { switchMode('client'); }
+
+    function changeGestorDate(d) {
+      gestorFilterDate = d;
+      loadGestorData();
+    }
+
+    async function loadGestorData() {
+      const container = document.getElementById('gestor-list');
+      if (!container || !_supabase) return;
+
+      try {
+        const { data } = await _supabase.from('agendamentos').select('*').eq('data', gestorFilterDate).order('horario', { ascending: true });
+        if (!data || data.length === 0) {
+          container.innerHTML = `<p class="text-xs text-gray-500 text-center py-6">Nenhum agendamento para esta data.</p>`;
+          document.getElementById('stat-count').innerText = "0";
+          document.getElementById('stat-total').innerText = "R$ 0,00";
+          return;
+        }
+
+        const validos = data.filter(a => a.status !== 'cancelado');
+        document.getElementById('stat-count').innerText = validos.length;
+        document.getElementById('stat-total').innerText = `R$ ${validos.reduce((a,c) => a + (c.valor_total || 0), 0)},00`;
+
+        container.innerHTML = data.map(a => {
+          const serviceNames = (a.servicos || []).map(sId => servicosCatalog.find(x => x.id === sId)?.nome || sId).join(', ');
+          const cleanPhone = (a.cliente_whatsapp || '').replace(/\D/g, '');
+          const msg = encodeURIComponent(`Olá ${a.cliente_nome}! Confirmando seu horário na InBarber hoje às ${a.horario}. Podemos confirmar?`);
+          const isBlocked = a.cliente_nome === 'HORÁRIO BLOQUEADO';
+
+          return `
+            <div class="p-3 bg-card rounded-xl border border-gray-800 space-y-2">
+              <div class="flex justify-between items-start">
+                <div>
+                  <p class="text-sm font-bold text-white">${a.horario} - ${a.cliente_nome}</p>
+                  ${a.cliente_whatsapp && !isBlocked ? `<p class="text-xs text-gray-300"><i class="fa-solid fa-phone text-[10px] text-gray-500 mr-1"></i>${a.cliente_whatsapp}</p>` : ''}
+                  <p class="text-xs text-gray-400 mt-0.5">${serviceNames}</p>
+                  <p class="text-xs font-semibold text-white mt-1">R$ ${a.valor_total},00</p>
+                </div>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-white/10 text-white font-bold uppercase">${a.status}</span>
+              </div>
+              
+              ${!isBlocked && cleanPhone ? `
+                <div class="pt-2 border-t border-gray-800/80 flex gap-2">
+                  <a href="https://wa.me/55${cleanPhone}?text=${msg}" target="_blank" class="px-2.5 py-1 rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold hover:bg-emerald-600/30 transition-all flex items-center gap-1">
+                    <i class="fa-brands fa-whatsapp text-xs"></i> Chamar no WhatsApp
+                  </a>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }).join('');
+      } catch(e){}
+    }
+
+    async function openBlockModal() {
+      const slot = prompt(`Digite o horário que deseja bloquear (Ex: 12:00, 13:00, 20:45) entre os disponíveis:\n\n${allSlots.join(', ')}`);
+      if (!slot) return;
+      if (!_supabase) return;
+
+      try {
+        const { error } = await _supabase.from('agendamentos').insert([{
+          cliente_nome: 'HORÁRIO BLOQUEADO',
+          cliente_whatsapp: '',
+          barbeiro_id: 'barbeiro',
+          servicos: [],
+          data: gestorFilterDate,
+          horario: slot,
+          valor_total: 0,
+          status: 'confirmado'
+        }]);
+
+        if (error) { alert('Erro ao bloquear: ' + error.message); return; }
+        alert(`Horário ${slot} bloqueado com sucesso!`);
+        loadGestorData();
+      } catch(e){}
+    }
+
+    // Inicialização
+    initClientUI();
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('modo') === 'gestor') switchMode('gestor');
+  </script>
+</body>
+</html>
+
