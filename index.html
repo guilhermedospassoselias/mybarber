@@ -54,6 +54,12 @@
         </div>
 
         <div class="bg-black/50 p-3 rounded-xl border border-gray-800 space-y-2">
+          <p class="text-xs font-bold text-white">Seu WhatsApp (Barbeiro)</p>
+          <input type="tel" id="barber-phone-input" placeholder="Ex: 11999998888" class="w-full bg-card border border-gray-800 rounded-lg px-2.5 py-1.5 text-xs text-gray-300 outline-none">
+          <button onclick="saveBarberPhone()" class="w-full py-1.5 bg-white/10 text-white border border-white/20 text-xs font-bold rounded-lg hover:bg-white/20">Salvar WhatsApp Barbeiro</button>
+        </div>
+
+        <div class="bg-black/50 p-3 rounded-xl border border-gray-800 space-y-2">
           <p class="text-xs font-bold text-white">URL da Z-API (WhatsApp)</p>
           <input type="text" id="webhook-url-input" class="w-full bg-card border border-gray-800 rounded-lg px-2.5 py-1.5 text-xs text-gray-300 outline-none">
           <button onclick="saveWebhookUrl()" class="w-full py-1.5 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold rounded-lg hover:bg-emerald-600/30">Salvar API</button>
@@ -326,6 +332,7 @@
         document.getElementById('gestor-date-input').value = '';
         document.getElementById('share-link-input').value = window.location.href.split('?')[0];
         document.getElementById('webhook-url-input').value = localStorage.getItem('inbarber_webhook_url') || ZAPI_URL_DEFAULT;
+        document.getElementById('barber-phone-input').value = localStorage.getItem('inbarber_barber_phone') || '';
         loadGestorData();
       } else {
         clientView.classList.remove('hidden');
@@ -346,6 +353,13 @@
       toggleGestorMenu();
     }
 
+    function saveBarberPhone() {
+      const phone = document.getElementById('barber-phone-input').value.trim();
+      localStorage.setItem('inbarber_barber_phone', phone);
+      alert('WhatsApp do barbeiro salvo!');
+      toggleGestorMenu();
+    }
+
     function copyShareLink() {
       const input = document.getElementById('share-link-input');
       input.select();
@@ -355,12 +369,14 @@
 
     async function sendAutoWhatsappNotification(bookingData) {
       const targetUrl = localStorage.getItem('inbarber_webhook_url') || ZAPI_URL_DEFAULT;
+      const barberPhone = localStorage.getItem('inbarber_barber_phone') || '';
 
-      let cleanPhone = bookingData.phone.replace(/\D/g, '');
-      if (!cleanPhone.startsWith('55')) { cleanPhone = '55' + cleanPhone; }
+      // 1. Enviar mensagem para o Cliente
+      let cleanCustomerPhone = bookingData.phone.replace(/\D/g, '');
+      if (!cleanCustomerPhone.startsWith('55')) { cleanCustomerPhone = '55' + cleanCustomerPhone; }
 
-      const payload = {
-        phone: cleanPhone,
+      const clientPayload = {
+        phone: cleanCustomerPhone,
         message: `Olá ${bookingData.name}! Seu agendamento na InBarber foi confirmado para o dia ${bookingData.dayNum} às ${bookingData.slot}.`
       };
 
@@ -368,10 +384,33 @@
         await fetch(targetUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
+          body: JSON.stringify(clientPayload)
         });
       } catch(e) {
-        console.warn('Erro ao disparar WhatsApp:', e);
+        console.warn('Erro ao disparar WhatsApp do cliente:', e);
+      }
+
+      // 2. Enviar mensagem de aviso para o Barbeiro (se cadastrado)
+      if (barberPhone) {
+        let cleanBarberPhone = barberPhone.replace(/\D/g, '');
+        if (!cleanBarberPhone.startsWith('55')) { cleanBarberPhone = '55' + cleanBarberPhone; }
+
+        const srvText = (bookingData.services || []).map(s => servicosCatalog.find(x => x.id === s)?.nome || s).join(', ');
+
+        const barberPayload = {
+          phone: cleanBarberPhone,
+          message: `🚨 NOVO AGENDAMENTO!\n\n👤 Cliente: ${bookingData.name}\n📱 Tel: ${bookingData.phone}\n📅 Dia: ${bookingData.dayNum}\n⏰ Horário: ${bookingData.slot}\n✂️ Serviço: ${srvText || 'Geral'}`
+        };
+
+        try {
+          await fetch(targetUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(barberPayload)
+          });
+        } catch(e) {
+          console.warn('Erro ao disparar aviso do barbeiro:', e);
+        }
       }
     }
 
@@ -403,7 +442,7 @@
       existing.push(newBooking);
       localStorage.setItem('inbarber_local_bookings', JSON.stringify(existing));
 
-      await sendAutoWhatsappNotification({ name, phone, dayNum: selectedDayNumber, slot: selectedSlotTime });
+      await sendAutoWhatsappNotification({ name, phone, dayNum: selectedDayNumber, slot: selectedSlotTime, services: selectedServices });
       alert('Agendamento realizado com sucesso!');
       window.location.reload();
     }
@@ -414,7 +453,7 @@
     }
 
     function loadGestorData() {
-      const filterDateInput = document.getElementById('gestor-date-input').value; // AAAA-MM-DD
+      const filterDateInput = document.getElementById('gestor-date-input').value;
       const listContainer = document.getElementById('gestor-list');
       const subtitle = document.getElementById('list-subtitle');
       const allBookings = JSON.parse(localStorage.getItem('inbarber_local_bookings') || '[]');
