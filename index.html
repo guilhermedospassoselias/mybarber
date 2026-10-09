@@ -49,10 +49,10 @@
           </div>
         </div>
 
-        <!-- Configuração de Webhook do WhatsApp (Bot Automático) -->
+        <!-- Configuração de Webhook do WhatsApp (Z-API) -->
         <div class="bg-black/50 p-3 rounded-xl border border-gray-800 space-y-2">
-          <p class="text-xs font-bold text-white">Webhook / API do WhatsApp</p>
-          <input type="text" id="webhook-url-input" placeholder="URL da API (ex: https://...)" class="w-full bg-card border border-gray-800 rounded-lg px-2.5 py-1.5 text-xs text-gray-300 outline-none">
+          <p class="text-xs font-bold text-white">URL do Envio da Z-API</p>
+          <input type="text" id="webhook-url-input" placeholder="https://api.z-api.io/instances/.../send-text" class="w-full bg-card border border-gray-800 rounded-lg px-2.5 py-1.5 text-xs text-gray-300 outline-none">
           <button onclick="saveWebhookUrl()" class="w-full py-1.5 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold rounded-lg hover:bg-emerald-600/30">Salvar API</button>
         </div>
 
@@ -120,4 +120,35 @@
               <i class="fa-solid fa-circle text-gray-700 srv-icon"></i>
             </div>
             <div onclick="toggleService('sobrancelha')" id="srv-sobrancelha" class="srv-card p-3 rounded-xl bg-card border border-gray-800 cursor-pointer flex justify-between items-center transition-all">
-              <div><p class="text-sm font-semibold text-white">Sobrancelha</p><p class="text
+              <div><p class="text-sm font-semibold text-white">Sobrancelha</p><p class="text-xs text-gray-400">5 min • R$ 20,00</p></div>
+              <i class="fa-solid fa-circle text-gray-700 srv-icon"></i>
+            </div>
+            <div onclick="toggleService('luzes')" id="srv-luzes" class="srv-card p-3 rounded-xl bg-card border border-gray-800 cursor-pointer flex justify-between items-center transition-all">
+              <div><p class="text-sm font-semibold text-white">Luzes</p><p class="text-xs text-gray-400">120 min • R$ 150,00</p></div>
+              <i class="fa-solid fa-circle text-gray-700 srv-icon"></i>
+            </div>
+            <div onclick="toggleService('platinado')" id="srv-platinado" class="srv-card p-3 rounded-xl bg-card border border-gray-800 cursor-pointer flex justify-between items-center transition-all">
+              <div><p class="text-sm font-semibold text-white">Platinado</p><p class="text-xs text-gray-400">150 min • R$ 200,00</p></div>
+              <i class="fa-solid fa-circle text-gray-700 srv-icon"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Dias do Mês (01 ao 31) -->
+        <div class="space-y-2">
+          <label class="text-xs font-semibold uppercase tracking-wider text-white">3. Dia do Agendamento (01 a 31)</label>
+          <div class="grid grid-cols-5 gap-2 max-h-48 overflow-y-auto pr-1">
+            <button onclick="selectDay(this, '01')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">01</p></button>
+            <button onclick="selectDay(this, '02')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">02</p></button>
+            <button onclick="selectDay(this, '03')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">03</p></button>
+            <button onclick="selectDay(this, '04')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">04</p></button>
+            <button onclick="selectDay(this, '05')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">05</p></button>
+            <button onclick="selectDay(this, '06')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">06</p></button>
+            <button onclick="selectDay(this, '07')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">07</p></button>
+            <button onclick="selectDay(this, '08')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">08</p></button>
+            <button onclick="selectDay(this, '09')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">09</p></button>
+            <button onclick="selectDay(this, '10')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">10</p></button>
+            <button onclick="selectDay(this, '11')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">11</p></button>
+            <button onclick="selectDay(this, '12')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">12</p></button>
+            <button onclick="selectDay(this, '13')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">13</p></button>
+            <button onclick="selectDay(this, '14')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-
