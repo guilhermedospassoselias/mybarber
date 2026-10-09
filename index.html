@@ -37,8 +37,8 @@
       </div>
     </header>
 
-    <!-- Menu Lateral do Barbeiro (Garantido escondido até clicar) -->
-    <div id="gestor-drawer" style="display: none;" class="fixed inset-0 bg-black/80 z-50 flex justify-end">
+    <!-- Menu Lateral do Barbeiro -->
+    <div id="gestor-drawer" class="hidden fixed inset-0 bg-black/80 z-50 flex justify-end">
       <div class="w-4/5 max-w-sm bg-[#121215] h-full p-5 border-l border-gray-800 space-y-6 overflow-y-auto">
         <div class="flex justify-between items-center border-b border-gray-800 pb-3">
           <h3 class="text-base font-bold text-white uppercase tracking-wider">Painel de Controle</h3>
@@ -124,27 +124,354 @@
           </div>
         </div>
 
-        <!-- 3. Dias do Mês (01 a 31) -->
+        <!-- 3. Dias do Mês (01 ao 31 + Dias da Semana) -->
         <div class="space-y-2">
           <label class="text-xs font-semibold uppercase tracking-wider text-white">3. Dia do Agendamento (01 a 31)</label>
           <div class="grid grid-cols-5 gap-2 max-h-48 overflow-y-auto pr-1">
-            <button type="button" onclick="selectDay(this, '01')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">01</p></button>
-            <button type="button" onclick="selectDay(this, '02')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">02</p></button>
-            <button type="button" onclick="selectDay(this, '03')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">03</p></button>
-            <button type="button" onclick="selectDay(this, '04')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">04</p></button>
-            <button type="button" onclick="selectDay(this, '05')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">05</p></button>
-            <button type="button" onclick="selectDay(this, '06')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">06</p></button>
-            <button type="button" onclick="selectDay(this, '07')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">07</p></button>
-            <button type="button" onclick="selectDay(this, '08')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">08</p></button>
-            <button type="button" onclick="selectDay(this, '09')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">09</p></button>
-            <button type="button" onclick="selectDay(this, '10')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">10</p></button>
-            <button type="button" onclick="selectDay(this, '11')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">11</p></button>
-            <button type="button" onclick="selectDay(this, '12')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">12</p></button>
-            <button type="button" onclick="selectDay(this, '13')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">13</p></button>
-            <button type="button" onclick="selectDay(this, '14')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">14</p></button>
-            <button type="button" onclick="selectDay(this, '15')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">15</p></button>
-            <button type="button" onclick="selectDay(this, '16')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">16</p></button>
-            <button type="button" onclick="selectDay(this, '17')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">17</p></button>
-            <button type="button" onclick="selectDay(this, '18')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">18</p></button>
-            <button type="button" onclick="selectDay(this, '19')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">19</p></button>
-            <button
+            <button onclick="selectDay(this, '01')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">SEG</p><p class="text-xs font-bold">01</p></button>
+            <button onclick="selectDay(this, '02')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">TER</p><p class="text-xs font-bold">02</p></button>
+            <button onclick="selectDay(this, '03')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">QUA</p><p class="text-xs font-bold">03</p></button>
+            <button onclick="selectDay(this, '04')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">QUI</p><p class="text-xs font-bold">04</p></button>
+            <button onclick="selectDay(this, '05')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">SEX</p><p class="text-xs font-bold">05</p></button>
+            <button onclick="selectDay(this, '06')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">SÁB</p><p class="text-xs font-bold">06</p></button>
+            <button onclick="selectDay(this, '07')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DOM</p><p class="text-xs font-bold">07</p></button>
+            <button onclick="selectDay(this, '08')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">SEG</p><p class="text-xs font-bold">08</p></button>
+            <button onclick="selectDay(this, '09')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">TER</p><p class="text-xs font-bold">09</p></button>
+            <button onclick="selectDay(this, '10')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">QUA</p><p class="text-xs font-bold">10</p></button>
+            <button onclick="selectDay(this, '11')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">QUI</p><p class="text-xs font-bold">11</p></button>
+            <button onclick="selectDay(this, '12')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">SEX</p><p class="text-xs font-bold">12</p></button>
+            <button onclick="selectDay(this, '13')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">SÁB</p><p class="text-xs font-bold">13</p></button>
+            <button onclick="selectDay(this, '14')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DOM</p><p class="text-xs font-bold">14</p></button>
+            <button onclick="selectDay(this, '15')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">SEG</p><p class="text-xs font-bold">15</p></button>
+            <button onclick="selectDay(this, '16')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">TER</p><p class="text-xs font-bold">16</p></button>
+            <button onclick="selectDay(this, '17')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">QUA</p><p class="text-xs font-bold">17</p></button>
+            <button onclick="selectDay(this, '18')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">QUI</p><p class="text-xs font-bold">18</p></button>
+            <button onclick="selectDay(this, '19')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">SEX</p><p class="text-xs font-bold">19</p></button>
+            <button onclick="selectDay(this, '20')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">SÁB</p><p class="text-xs font-bold">20</p></button>
+            <button onclick="selectDay(this, '21')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DOM</p><p class="text-xs font-bold">21</p></button>
+            <button onclick="selectDay(this, '22')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">SEG</p><p class="text-xs font-bold">22</p></button>
+            <button onclick="selectDay(this, '23')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">TER</p><p class="text-xs font-bold">23</p></button>
+            <button onclick="selectDay(this, '24')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">QUA</p><p class="text-xs font-bold">24</p></button>
+            <button onclick="selectDay(this, '25')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">QUI</p><p class="text-xs font-bold">25</p></button>
+            <button onclick="selectDay(this, '26')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">SEX</p><p class="text-xs font-bold">26</p></button>
+            <button onclick="selectDay(this, '27')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">SÁB</p><p class="text-xs font-bold">27</p></button>
+            <button onclick="selectDay(this, '28')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DOM</p><p class="text-xs font-bold">28</p></button>
+            <button onclick="selectDay(this, '29')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">SEG</p><p class="text-xs font-bold">29</p></button>
+            <button onclick="selectDay(this, '30')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">TER</p><p class="text-xs font-bold">30</p></button>
+            <button onclick="selectDay(this, '31')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">QUA</p><p class="text-xs font-bold">31</p></button>
+          </div>
+        </div>
+
+        <!-- 4. Horários Disponíveis (09:00 às 22:00) -->
+        <div class="space-y-2">
+          <label class="text-xs font-semibold uppercase tracking-wider text-white">4. Horário Disponível (09h às 22h)</label>
+          <div class="grid grid-cols-4 gap-2 max-h-52 overflow-y-auto pr-1">
+            <button onclick="selectSlot(this, '09:00')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">09:00</button>
+            <button onclick="selectSlot(this, '09:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">09:45</button>
+            <button onclick="selectSlot(this, '10:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">10:45</button>
+            <button onclick="selectSlot(this, '11:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">11:45</button>
+            <button onclick="selectSlot(this, '13:00')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">13:00</button>
+            <button onclick="selectSlot(this, '13:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">13:45</button>
+            <button onclick="selectSlot(this, '14:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">14:45</button>
+            <button onclick="selectSlot(this, '15:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">15:45</button>
+            <button onclick="selectSlot(this, '16:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">16:45</button>
+            <button onclick="selectSlot(this, '17:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">17:45</button>
+            <button onclick="selectSlot(this, '18:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">18:45</button>
+            <button onclick="selectSlot(this, '19:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">19:45</button>
+            <button onclick="selectSlot(this, '20:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">20:45</button>
+            <button onclick="selectSlot(this, '21:30')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">21:30</button>
+            <button onclick="selectSlot(this, '22:00')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">22:00</button>
+          </div>
+        </div>
+
+        <!-- Formulário -->
+        <div class="space-y-3 pt-2">
+          <input type="text" id="cust-name" placeholder="Seu Nome Completo" class="w-full bg-card border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-white outline-none">
+          <input type="tel" id="cust-phone" placeholder="WhatsApp (DDD + Número)" class="w-full bg-card border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-white outline-none">
+          <button onclick="confirmBooking()" class="w-full py-4 rounded-xl bg-white text-black font-bold text-sm uppercase tracking-wider shadow-lg hover:bg-gray-200 transition-all">Confirmar Agendamento</button>
+        </div>
+      </div>
+
+      <!-- MODO GESTOR (PAINEL DO BARBEIRO) -->
+      <div id="view-gestor" class="hidden space-y-6">
+        <div class="flex justify-between items-center">
+          <div>
+            <h2 class="text-xl font-bold text-white">Agenda do Barbeiro</h2>
+            <p class="text-xs text-gray-400">Gerencie horários e atendimentos</p>
+          </div>
+          <button onclick="openBlockModal()" class="px-3 py-2 bg-white/10 text-white rounded-lg border border-white/20 text-xs font-semibold hover:bg-white/20 transition-all flex items-center gap-1">
+            <i class="fa-solid fa-ban"></i> Fechar Agenda
+          </button>
+        </div>
+
+        <div class="bg-card p-3 rounded-xl border border-gray-800 flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-calendar text-gray-400 text-xs"></i>
+            <span class="text-xs text-gray-400 font-semibold uppercase">Data:</span>
+          </div>
+          <input type="date" id="gestor-date-input" onchange="loadGestorData()" class="bg-black text-white text-xs border border-gray-800 rounded-lg px-3 py-2 focus:border-white outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="bg-card p-3 rounded-xl border border-gray-800">
+            <p class="text-[10px] uppercase text-gray-400 font-bold">Hoje</p>
+            <p class="text-xs text-emerald-400 font-semibold" id="stat-today-fat">R$ 0,00</p>
+            <p class="text-2xl font-bold text-white mt-1" id="stat-count">0</p>
+          </div>
+          <div class="bg-card p-3 rounded-xl border border-gray-800">
+            <p class="text-[10px] uppercase text-gray-400 font-bold">Esta semana</p>
+            <p class="text-xs text-emerald-400 font-semibold" id="stat-week-fat">R$ 0,00</p>
+            <p class="text-2xl font-bold text-white mt-1" id="stat-week-count">0</p>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs font-semibold uppercase tracking-wider text-white">Atendimentos do Dia</label>
+          <div id="gestor-list" class="space-y-3">Nenhum agendamento cadastrado.</div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Rodapé -->
+  <footer class="max-w-md mx-auto w-full px-4 py-6 text-center border-t border-gray-900 mt-8">
+    <button id="footer-btn" onclick="requestGestorAccess()" class="text-xs text-gray-300 hover:text-white transition-all flex items-center justify-center gap-1.5 mx-auto bg-white/5 border border-white/10 px-4 py-2 rounded-full font-semibold">
+      <i class="fa-solid fa-lock text-[10px]"></i> Área do Barbeiro
+    </button>
+  </footer>
+
+  <script>
+    const GESTOR_PIN = "1234";
+    const ZAPI_URL_DEFAULT = "https://api.z-api.io/instances/3FA5A2ED948571F3275026B62501F218/token/6AAB094CAF1774E7CF7C2D33/send-text";
+
+    let selectedServices = [];
+    let selectedDayNumber = null;
+    let selectedSlotTime = null;
+
+    const servicosCatalog = [
+      { id: 'corte_social', nome: 'Corte social', preco: 40 },
+      { id: 'corte_degrade_maquina', nome: 'Corte degrade máquina', preco: 40 },
+      { id: 'corte_degrade_navalhado', nome: 'Corte degrade navalhado', preco: 45 },
+      { id: 'corte_degrade_shaver', nome: 'Corte degrade shaver', preco: 45 },
+      { id: 'barba_normal', nome: 'Barba normal', preco: 30 },
+      { id: 'barba_toalha_quente', nome: 'Barba toalha quente', preco: 35 },
+      { id: 'sobrancelha', nome: 'Sobrancelha', preco: 20 },
+      { id: 'luzes', nome: 'Luzes', preco: 150 },
+      { id: 'platinado', nome: 'Platinado', preco: 200 }
+    ];
+
+    function selectDay(btn, dayNum) {
+      document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedDayNumber = dayNum;
+    }
+
+    function selectSlot(btn, slotTime) {
+      document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedSlotTime = slotTime;
+    }
+
+    function toggleService(id) {
+      const card = document.getElementById(`srv-${id}`);
+      if (!card) return;
+      const icon = card.querySelector('.srv-icon');
+      
+      if (selectedServices.includes(id)) {
+        selectedServices = selectedServices.filter(x => x !== id);
+        card.classList.remove('selected');
+        if (icon) icon.className = "fa-solid fa-circle text-gray-700 srv-icon";
+      } else {
+        selectedServices.push(id);
+        card.classList.add('selected');
+        if (icon) icon.className = "fa-solid fa-circle-check text-white srv-icon";
+      }
+    }
+
+    function requestGestorAccess() {
+      const pin = prompt("Digite a senha do barbeiro:");
+      if (pin === GESTOR_PIN) {
+        switchMode('gestor');
+      } else if (pin !== null) {
+        alert("Senha incorreta!");
+      }
+    }
+
+    function switchMode(mode) {
+      const clientView = document.getElementById('view-client');
+      const gestorView = document.getElementById('view-gestor');
+      const topBarberBtn = document.getElementById('top-barber-btn');
+      const gestorActions = document.getElementById('gestor-actions');
+      const footerBtn = document.getElementById('footer-btn');
+
+      if (mode === 'gestor') {
+        clientView.classList.add('hidden');
+        gestorView.classList.remove('hidden');
+        if (topBarberBtn) topBarberBtn.classList.add('hidden');
+        if (gestorActions) gestorActions.classList.remove('hidden');
+        if (footerBtn) footerBtn.classList.add('hidden');
+        
+        document.getElementById('gestor-date-input').value = new Date().toISOString().split('T')[0];
+        document.getElementById('share-link-input').value = window.location.href.split('?')[0];
+        document.getElementById('webhook-url-input').value = localStorage.getItem('inbarber_webhook_url') || ZAPI_URL_DEFAULT;
+        loadGestorData();
+      } else {
+        clientView.classList.remove('hidden');
+        gestorView.classList.add('hidden');
+        if (topBarberBtn) topBarberBtn.classList.remove('hidden');
+        if (gestorActions) gestorActions.classList.add('hidden');
+        if (footerBtn) footerBtn.classList.remove('hidden');
+      }
+    }
+
+    function logoutGestor() { switchMode('client'); }
+    function toggleGestorMenu() { document.getElementById('gestor-drawer').classList.toggle('hidden'); }
+    
+    function saveWebhookUrl() {
+      const url = document.getElementById('webhook-url-input').value.trim();
+      localStorage.setItem('inbarber_webhook_url', url);
+      alert('URL da API salva com sucesso!');
+      toggleGestorMenu();
+    }
+
+    function copyShareLink() {
+      const input = document.getElementById('share-link-input');
+      input.select();
+      document.execCommand('copy');
+      alert('Link copiado!');
+    }
+
+    async function sendAutoWhatsappNotification(bookingData) {
+      const targetUrl = localStorage.getItem('inbarber_webhook_url') || ZAPI_URL_DEFAULT;
+
+      let cleanPhone = bookingData.phone.replace(/\D/g, '');
+      if (!cleanPhone.startsWith('55')) { cleanPhone = '55' + cleanPhone; }
+
+      const payload = {
+        phone: cleanPhone,
+        message: `Olá ${bookingData.name}! Seu agendamento na InBarber foi confirmado para o dia ${bookingData.isoDate} às ${bookingData.slot}.`
+      };
+
+      try {
+        await fetch(targetUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch(e) {
+        console.warn('Erro ao disparar WhatsApp:', e);
+      }
+    }
+
+    async function confirmBooking() {
+      const name = document.getElementById('cust-name')?.value.trim();
+      const phone = document.getElementById('cust-phone')?.value.trim();
+
+      if (!name || !phone || !selectedDayNumber || !selectedSlotTime || selectedServices.length === 0) {
+        alert('Por favor, escolha o serviço, dia, horário e preencha seu nome e WhatsApp.');
+        return;
+      }
+
+      const now = new Date();
+      const isoDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${selectedDayNumber}`;
+
+      const newBooking = {
+        id: Date.now(),
+        cliente_nome: name,
+        cliente_whatsapp: phone,
+        servicos: selectedServices,
+        data: isoDate,
+        horario: selectedSlotTime,
+        valor_total: selectedServices.reduce((acc, curr) => acc + (servicosCatalog.find(s => s.id === curr)?.preco || 0), 0),
+        status: 'confirmado'
+      };
+
+      const existing = JSON.parse(localStorage.getItem('inbarber_local_bookings') || '[]');
+      existing.push(newBooking);
+      localStorage.setItem('inbarber_local_bookings', JSON.stringify(existing));
+
+      await sendAutoWhatsappNotification({ name, phone, isoDate, slot: selectedSlotTime });
+      alert('Agendamento realizado com sucesso!');
+      window.location.reload();
+    }
+
+    function loadGestorData() {
+      const filterDate = document.getElementById('gestor-date-input').value;
+      const listContainer = document.getElementById('gestor-list');
+      const allBookings = JSON.parse(localStorage.getItem('inbarber_local_bookings') || '[]');
+
+      const dayBookings = allBookings.filter(b => b.data === filterDate);
+      const todayFat = dayBookings.reduce((acc, b) => acc + (b.valor_total || 0), 0);
+
+      document.getElementById('stat-count').innerText = dayBookings.length;
+      document.getElementById('stat-today-fat').innerText = `R$ ${todayFat},00`;
+
+      const weekFat = allBookings.reduce((acc, b) => acc + (b.valor_total || 0), 0);
+      document.getElementById('stat-week-count').innerText = allBookings.length;
+      document.getElementById('stat-week-fat').innerText = `R$ ${weekFat},00`;
+
+      if (dayBookings.length === 0) {
+        listContainer.innerHTML = '<p class="text-xs text-gray-500 text-center py-6">Nenhum agendamento para esta data.</p>';
+        return;
+      }
+
+      listContainer.innerHTML = dayBookings.map(b => {
+        const srvNames = (b.servicos || []).map(s => servicosCatalog.find(x => x.id === s)?.nome || s).join(', ');
+        const cleanPhone = (b.cliente_whatsapp || '').replace(/\D/g, '');
+        const msg = encodeURIComponent(`Olá ${b.cliente_nome}! Confirmando seu horário na InBarber hoje às ${b.horario}.`);
+
+        return `
+          <div class="p-3 bg-card rounded-xl border border-gray-800 space-y-2">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="text-sm font-bold text-white">${b.horario} - ${b.cliente_nome}</p>
+                <p class="text-xs text-gray-300">${b.cliente_whatsapp}</p>
+                <p class="text-xs text-gray-400 mt-0.5">${srvNames}</p>
+                <p class="text-xs font-semibold text-white mt-1">R$ ${b.valor_total},00</p>
+              </div>
+              <button onclick="deleteBooking(${b.id})" class="text-xs text-red-500"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            ${cleanPhone ? `
+              <div class="pt-2 border-t border-gray-800 flex gap-2">
+                <a href="https://wa.me/55${cleanPhone}?text=${msg}" target="_blank" class="px-2.5 py-1 rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold">
+                  <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function deleteBooking(id) {
+      if (!confirm('Deseja excluir este agendamento?')) return;
+      let allBookings = JSON.parse(localStorage.getItem('inbarber_local_bookings') || '[]');
+      allBookings = allBookings.filter(b => b.id !== id);
+      localStorage.setItem('inbarber_local_bookings', JSON.stringify(allBookings));
+      loadGestorData();
+    }
+
+    function openBlockModal() {
+      const slotRange = prompt("Digite o intervalo para fechar a agenda (Ex: 14:00 - 21:30):");
+      if (!slotRange) return;
+      const filterDate = document.getElementById('gestor-date-input').value;
+
+      const newBooking = {
+        id: Date.now(),
+        cliente_nome: 'HORÁRIO BLOQUEADO',
+        cliente_whatsapp: '',
+        servicos: [],
+        data: filterDate,
+        horario: slotRange,
+        valor_total: 0,
+        status: 'bloqueado'
+      };
+
+      const existing = JSON.parse(localStorage.getItem('inbarber_local_bookings') || '[]');
+      existing.push(newBooking);
+      localStorage.setItem('inbarber_local_bookings', JSON.stringify(existing));
+      loadGestorData();
+    }
+  </script>
+</body>
+</html>
