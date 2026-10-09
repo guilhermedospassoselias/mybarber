@@ -14,25 +14,32 @@
     .srv-card.selected { border-color: #ffffff !important; background-color: rgba(255, 255, 255, 0.1) !important; }
   </style>
 </head>
-<body class="min-h-screen pb-16 flex flex-col justify-between">
+<body class="min-h-screen pb-24 flex flex-col justify-between">
   <div>
     <!-- Topo da Marca -->
-    <header class="border-b border-gray-800 bg-black/50 backdrop-blur sticky top-0 z-50">
+    <header class="border-b border-gray-800 bg-black/80 backdrop-blur sticky top-0 z-40">
       <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
         <div class="flex items-center gap-2 cursor-pointer" onclick="switchMode('client')">
           <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center font-bold text-black text-sm">IB</div>
           <span class="font-bold tracking-wide text-sm text-white">INBARBER</span>
         </div>
-        <div id="gestor-badge" class="hidden flex items-center gap-2">
-          <button onclick="toggleGestorMenu()" class="text-xs bg-white/10 text-white border border-white/20 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider flex items-center gap-1">
-            <i class="fa-solid fa-bars"></i> Menu
+        
+        <!-- Botão para acessar a Área do Barbeiro -->
+        <div class="flex items-center gap-2">
+          <button id="top-barber-btn" onclick="requestGestorAccess()" class="text-xs bg-white/10 text-white border border-white/20 px-3 py-1.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1 hover:bg-white/20">
+            <i class="fa-solid fa-lock text-[10px]"></i> Barbeiro
           </button>
-          <button onclick="logoutGestor()" class="text-xs text-gray-400 hover:text-white transition-all"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+          <div id="gestor-actions" class="hidden flex items-center gap-2">
+            <button onclick="toggleGestorMenu()" class="text-xs bg-white text-black px-3 py-1.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1">
+              <i class="fa-solid fa-bars"></i> Menu
+            </button>
+            <button onclick="logoutGestor()" class="text-xs text-gray-400 hover:text-white transition-all"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+          </div>
         </div>
       </div>
     </header>
 
-    <!-- Menu Lateral / Modal de Configurações do Gestor -->
+    <!-- Menu Lateral do Gestor -->
     <div id="gestor-drawer" class="hidden fixed inset-0 bg-black/80 z-50 flex justify-end">
       <div class="w-4/5 max-w-sm bg-[#121215] h-full p-5 border-l border-gray-800 space-y-6 overflow-y-auto">
         <div class="flex justify-between items-center border-b border-gray-800 pb-3">
@@ -40,7 +47,6 @@
           <button onclick="toggleGestorMenu()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
         </div>
 
-        <!-- Copiar e Compartilhar Link -->
         <div class="bg-black/50 p-3 rounded-xl border border-gray-800 space-y-2">
           <p class="text-xs font-bold text-white">Seu Link de Agendamento</p>
           <div class="flex gap-2">
@@ -49,24 +55,10 @@
           </div>
         </div>
 
-        <!-- Configuração de Webhook do WhatsApp (Z-API) -->
         <div class="bg-black/50 p-3 rounded-xl border border-gray-800 space-y-2">
-          <p class="text-xs font-bold text-white">URL do Envio da Z-API</p>
+          <p class="text-xs font-bold text-white">URL da Z-API (WhatsApp)</p>
           <input type="text" id="webhook-url-input" placeholder="https://api.z-api.io/instances/.../send-text" class="w-full bg-card border border-gray-800 rounded-lg px-2.5 py-1.5 text-xs text-gray-300 outline-none">
           <button onclick="saveWebhookUrl()" class="w-full py-1.5 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold rounded-lg hover:bg-emerald-600/30">Salvar API</button>
-        </div>
-
-        <!-- Gerenciar Serviços -->
-        <div class="space-y-3">
-          <p class="text-xs font-bold text-white uppercase tracking-wider">Gerenciar Serviços</p>
-          <div class="space-y-2">
-            <input type="text" id="new-srv-name" placeholder="Nome do Serviço" class="w-full bg-card border border-gray-800 rounded-lg px-3 py-2 text-xs text-white outline-none">
-            <div class="grid grid-cols-2 gap-2">
-              <input type="number" id="new-srv-price" placeholder="Preço (R$)" class="w-full bg-card border border-gray-800 rounded-lg px-3 py-2 text-xs text-white outline-none">
-              <input type="number" id="new-srv-time" placeholder="Duração (min)" class="w-full bg-card border border-gray-800 rounded-lg px-3 py-2 text-xs text-white outline-none">
-            </div>
-            <button onclick="addCustomService()" class="w-full py-2 bg-white/10 text-white border border-white/20 rounded-lg text-xs font-bold hover:bg-white/20 transition-all">+ Adicionar Serviço</button>
-          </div>
         </div>
       </div>
     </div>
@@ -151,4 +143,15 @@
             <button onclick="selectDay(this, '11')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">11</p></button>
             <button onclick="selectDay(this, '12')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">12</p></button>
             <button onclick="selectDay(this, '13')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">13</p></button>
-            <button onclick="selectDay(this, '14')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-
+            <button onclick="selectDay(this, '14')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">14</p></button>
+            <button onclick="selectDay(this, '15')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">15</p></button>
+            <button onclick="selectDay(this, '16')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">16</p></button>
+            <button onclick="selectDay(this, '17')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">17</p></button>
+            <button onclick="selectDay(this, '18')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">18</p></button>
+            <button onclick="selectDay(this, '19')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">19</p></button>
+            <button onclick="selectDay(this, '20')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">20</p></button>
+            <button onclick="selectDay(this, '21')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">21</p></button>
+            <button onclick="selectDay(this, '22')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">22</p></button>
+            <button onclick="selectDay(this, '23')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">23</p></button>
+            <button onclick="selectDay(this, '24')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">24</p></button>
+            <button onclick="selectDay(this, '25')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font
