@@ -16,7 +16,7 @@
 <body class="min-h-screen pb-24 flex flex-col justify-between">
   <div>
     <!-- Topo -->
-    <header class="border-b border-gray-800 bg-black/80 backdrop-blur sticky top-0 z-40">
+    <header class="border-b border-gray-800 bg-black/80 backdrop-blur sticky top-0 z-30">
       <div class="max-w-md mx-auto px-4 py-3 flex justify-between items-center">
         <div class="flex items-center gap-2 cursor-pointer" onclick="switchMode('client')">
           <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center font-bold text-black text-sm">IB</div>
@@ -37,8 +37,8 @@
       </div>
     </header>
 
-    <!-- Drawer Lateral do Barbeiro -->
-    <div id="gestor-drawer" class="hidden fixed inset-0 bg-black/80 z-50 flex justify-end">
+    <!-- Menu Lateral do Barbeiro (Garantido escondido até clicar) -->
+    <div id="gestor-drawer" style="display: none;" class="fixed inset-0 bg-black/80 z-50 flex justify-end">
       <div class="w-4/5 max-w-sm bg-[#121215] h-full p-5 border-l border-gray-800 space-y-6 overflow-y-auto">
         <div class="flex justify-between items-center border-b border-gray-800 pb-3">
           <h3 class="text-base font-bold text-white uppercase tracking-wider">Painel de Controle</h3>
@@ -124,77 +124,27 @@
           </div>
         </div>
 
-        <!-- 3. Dias do Mês (HTML Puro) -->
+        <!-- 3. Dias do Mês (01 a 31) -->
         <div class="space-y-2">
           <label class="text-xs font-semibold uppercase tracking-wider text-white">3. Dia do Agendamento (01 a 31)</label>
           <div class="grid grid-cols-5 gap-2 max-h-48 overflow-y-auto pr-1">
-            <button onclick="selectDay(this, '01')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">01</p></button>
-            <button onclick="selectDay(this, '02')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">02</p></button>
-            <button onclick="selectDay(this, '03')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">03</p></button>
-            <button onclick="selectDay(this, '04')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">04</p></button>
-            <button onclick="selectDay(this, '05')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">05</p></button>
-            <button onclick="selectDay(this, '06')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">06</p></button>
-            <button onclick="selectDay(this, '07')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">07</p></button>
-            <button onclick="selectDay(this, '08')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">08</p></button>
-            <button onclick="selectDay(this, '09')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">09</p></button>
-            <button onclick="selectDay(this, '10')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">10</p></button>
-            <button onclick="selectDay(this, '11')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">11</p></button>
-            <button onclick="selectDay(this, '12')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">12</p></button>
-            <button onclick="selectDay(this, '13')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">13</p></button>
-            <button onclick="selectDay(this, '14')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">14</p></button>
-            <button onclick="selectDay(this, '15')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">15</p></button>
-            <button onclick="selectDay(this, '16')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">16</p></button>
-            <button onclick="selectDay(this, '17')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">17</p></button>
-            <button onclick="selectDay(this, '18')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">18</p></button>
-            <button onclick="selectDay(this, '19')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">19</p></button>
-            <button onclick="selectDay(this, '20')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">20</p></button>
-            <button onclick="selectDay(this, '21')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">21</p></button>
-            <button onclick="selectDay(this, '22')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">22</p></button>
-            <button onclick="selectDay(this, '23')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">23</p></button>
-            <button onclick="selectDay(this, '24')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">24</p></button>
-            <button onclick="selectDay(this, '25')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">25</p></button>
-            <button onclick="selectDay(this, '26')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">26</p></button>
-            <button onclick="selectDay(this, '27')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">27</p></button>
-            <button onclick="selectDay(this, '28')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">28</p></button>
-            <button onclick="selectDay(this, '29')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">29</p></button>
-            <button onclick="selectDay(this, '30')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">30</p></button>
-            <button onclick="selectDay(this, '31')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">31</p></button>
-          </div>
-        </div>
-
-        <!-- 4. Horários Disponíveis (HTML Puro) -->
-        <div class="space-y-2">
-          <label class="text-xs font-semibold uppercase tracking-wider text-white">4. Horário Disponível (09h às 22h)</label>
-          <div class="grid grid-cols-4 gap-2 max-h-52 overflow-y-auto pr-1">
-            <button onclick="selectSlot(this, '09:00')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">09:00</button>
-            <button onclick="selectSlot(this, '09:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">09:45</button>
-            <button onclick="selectSlot(this, '10:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">10:45</button>
-            <button onclick="selectSlot(this, '11:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">11:45</button>
-            <button onclick="selectSlot(this, '13:00')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">13:00</button>
-            <button onclick="selectSlot(this, '13:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">13:45</button>
-            <button onclick="selectSlot(this, '14:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">14:45</button>
-            <button onclick="selectSlot(this, '15:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">15:45</button>
-            <button onclick="selectSlot(this, '16:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">16:45</button>
-            <button onclick="selectSlot(this, '17:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">17:45</button>
-            <button onclick="selectSlot(this, '18:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">18:45</button>
-            <button onclick="selectSlot(this, '19:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">19:45</button>
-            <button onclick="selectSlot(this, '20:45')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">20:45</button>
-            <button onclick="selectSlot(this, '21:30')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">21:30</button>
-            <button onclick="selectSlot(this, '22:00')" class="slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300">22:00</button>
-          </div>
-        </div>
-
-        <!-- Formulário -->
-        <div class="space-y-3 pt-2">
-          <input type="text" id="cust-name" placeholder="Seu Nome Completo" class="w-full bg-card border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-white outline-none">
-          <input type="tel" id="cust-phone" placeholder="WhatsApp (DDD + Número)" class="w-full bg-card border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-white outline-none">
-          <button onclick="confirmBooking()" class="w-full py-4 rounded-xl bg-white text-black font-bold text-sm uppercase tracking-wider shadow-lg hover:bg-gray-200 transition-all">Confirmar Agendamento</button>
-        </div>
-      </div>
-
-      <!-- MODO GESTOR (PAINEL DO BARBEIRO) -->
-      <div id="view-gestor" class="hidden space-y-6">
-        <div class="flex justify-between items-center">
-          <div>
-            <h2 class="text-xl font-bold text-white">Agenda do Barbeiro</h2>
-            <p class
+            <button type="button" onclick="selectDay(this, '01')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">01</p></button>
+            <button type="button" onclick="selectDay(this, '02')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">02</p></button>
+            <button type="button" onclick="selectDay(this, '03')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">03</p></button>
+            <button type="button" onclick="selectDay(this, '04')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">04</p></button>
+            <button type="button" onclick="selectDay(this, '05')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">05</p></button>
+            <button type="button" onclick="selectDay(this, '06')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">06</p></button>
+            <button type="button" onclick="selectDay(this, '07')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">07</p></button>
+            <button type="button" onclick="selectDay(this, '08')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">08</p></button>
+            <button type="button" onclick="selectDay(this, '09')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">09</p></button>
+            <button type="button" onclick="selectDay(this, '10')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">10</p></button>
+            <button type="button" onclick="selectDay(this, '11')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">11</p></button>
+            <button type="button" onclick="selectDay(this, '12')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">12</p></button>
+            <button type="button" onclick="selectDay(this, '13')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">13</p></button>
+            <button type="button" onclick="selectDay(this, '14')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">14</p></button>
+            <button type="button" onclick="selectDay(this, '15')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">15</p></button>
+            <button type="button" onclick="selectDay(this, '16')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">16</p></button>
+            <button type="button" onclick="selectDay(this, '17')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">17</p></button>
+            <button type="button" onclick="selectDay(this, '18')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">18</p></button>
+            <button type="button" onclick="selectDay(this, '19')" class="day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center"><p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">19</p></button>
+            <button
