@@ -58,6 +58,12 @@
           <input type="text" id="webhook-url-input" class="w-full bg-card border border-gray-800 rounded-lg px-2.5 py-1.5 text-xs text-gray-300 outline-none">
           <button onclick="saveWebhookUrl()" class="w-full py-1.5 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold rounded-lg hover:bg-emerald-600/30">Salvar API</button>
         </div>
+
+        <div class="pt-4 border-t border-gray-800">
+          <button onclick="clearAllBookings()" class="w-full py-2 bg-red-600/20 text-red-400 border border-red-500/30 rounded-lg text-xs font-bold hover:bg-red-600/30 transition-all">
+            <i class="fa-solid fa-trash-can mr-1"></i> Limpar Todos os Registros
+          </button>
+        </div>
       </div>
     </div>
 
@@ -381,6 +387,7 @@
         cliente_whatsapp: phone,
         servicos: selectedServices,
         data: isoDate,
+        dia_numero: selectedDayNumber,
         horario: selectedSlotTime,
         valor_total: selectedServices.reduce((acc, curr) => acc + (servicosCatalog.find(s => s.id === curr)?.preco || 0), 0),
         status: 'confirmado'
@@ -396,11 +403,15 @@
     }
 
     function loadGestorData() {
-      const filterDate = document.getElementById('gestor-date-input').value;
+      const filterDateInput = document.getElementById('gestor-date-input').value; // AAAA-MM-DD
       const listContainer = document.getElementById('gestor-list');
       const allBookings = JSON.parse(localStorage.getItem('inbarber_local_bookings') || '[]');
 
-      const dayBookings = allBookings.filter(b => b.data === filterDate);
+      // Pega o número do dia selecionado no filtro (Ex: '08' de '2026-10-08')
+      const filterDayNum = filterDateInput ? filterDateInput.split('-')[2] : null;
+
+      // Filtra por data completa ou apenas pelo número do dia gravado
+      const dayBookings = allBookings.filter(b => b.data === filterDateInput || b.dia_numero === filterDayNum);
       const todayFat = dayBookings.reduce((acc, b) => acc + (b.valor_total || 0), 0);
 
       document.getElementById('stat-count').innerText = dayBookings.length;
@@ -411,7 +422,7 @@
       document.getElementById('stat-week-fat').innerText = `R$ ${weekFat},00`;
 
       if (dayBookings.length === 0) {
-        listContainer.innerHTML = '<p class="text-xs text-gray-500 text-center py-6">Nenhum agendamento para esta data.</p>';
+        listContainer.innerHTML = '<p class="text-xs text-gray-500 text-center py-6">Nenhum agendamento para este dia.</p>';
         return;
       }
 
@@ -425,16 +436,18 @@
             <div class="flex justify-between items-start">
               <div>
                 <p class="text-sm font-bold text-white">${b.horario} - ${b.cliente_nome}</p>
-                <p class="text-xs text-gray-300">${b.cliente_whatsapp}</p>
-                <p class="text-xs text-gray-400 mt-0.5">${srvNames}</p>
-                <p class="text-xs font-semibold text-white mt-1">R$ ${b.valor_total},00</p>
+                <p class="text-xs text-gray-300"><i class="fa-solid fa-phone text-[10px] text-gray-500 mr-1"></i>${b.cliente_whatsapp || 'Sem número'}</p>
+                <p class="text-xs text-gray-400 mt-0.5">${srvNames || 'Serviço Personalizado'}</p>
+                <p class="text-xs font-semibold text-emerald-400 mt-1">R$ ${b.valor_total},00</p>
               </div>
-              <button onclick="deleteBooking(${b.id})" class="text-xs text-red-500"><i class="fa-solid fa-trash"></i></button>
+              <button onclick="deleteBooking(${b.id})" class="text-xs text-red-500 hover:text-red-400 p-1.5 rounded-lg bg-red-500/10 border border-red-500/20" title="Excluir Horário">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
             </div>
             ${cleanPhone ? `
-              <div class="pt-2 border-t border-gray-800 flex gap-2">
-                <a href="https://wa.me/55${cleanPhone}?text=${msg}" target="_blank" class="px-2.5 py-1 rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold">
-                  <i class="fa-brands fa-whatsapp"></i> WhatsApp
+              <div class="pt-2 border-t border-gray-800/80 flex gap-2">
+                <a href="https://wa.me/55${cleanPhone}?text=${msg}" target="_blank" class="px-2.5 py-1 rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold flex items-center gap-1">
+                  <i class="fa-brands fa-whatsapp"></i> Chamar no WhatsApp
                 </a>
               </div>
             ` : ''}
@@ -444,24 +457,34 @@
     }
 
     function deleteBooking(id) {
-      if (!confirm('Deseja excluir este agendamento?')) return;
+      if (!confirm('Deseja realmente remover este agendamento?')) return;
       let allBookings = JSON.parse(localStorage.getItem('inbarber_local_bookings') || '[]');
       allBookings = allBookings.filter(b => b.id !== id);
       localStorage.setItem('inbarber_local_bookings', JSON.stringify(allBookings));
       loadGestorData();
     }
 
+    function clearAllBookings() {
+      if (!confirm('Tem certeza de que deseja apagar TODOS os registros e zerar o faturamento?')) return;
+      localStorage.removeItem('inbarber_local_bookings');
+      alert('Histórico apagado com sucesso!');
+      loadGestorData();
+      toggleGestorMenu();
+    }
+
     function openBlockModal() {
       const slotRange = prompt("Digite o intervalo para fechar a agenda (Ex: 14:00 - 21:30):");
       if (!slotRange) return;
-      const filterDate = document.getElementById('gestor-date-input').value;
+      const filterDateInput = document.getElementById('gestor-date-input').value;
+      const filterDayNum = filterDateInput ? filterDateInput.split('-')[2] : null;
 
       const newBooking = {
         id: Date.now(),
         cliente_nome: 'HORÁRIO BLOQUEADO',
         cliente_whatsapp: '',
         servicos: [],
-        data: filterDate,
+        data: filterDateInput,
+        dia_numero: filterDayNum,
         horario: slotRange,
         valor_total: 0,
         status: 'bloqueado'
