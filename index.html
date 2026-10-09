@@ -136,23 +136,19 @@
           </div>
         </div>
 
-        <!-- 3. Dias do Mês (01 ao 31) -->
+        <!-- 3. Dias do Mês -->
         <div class="space-y-2">
           <label class="text-xs font-semibold uppercase tracking-wider text-white">3. Dia do Agendamento (01 a 31)</label>
-          <div class="grid grid-cols-5 gap-2 max-h-48 overflow-y-auto pr-1" id="days-grid">
-            <!-- Gerado dinamicamente do 01 ao 31 para garantir renderização perfeita -->
-          </div>
+          <div class="grid grid-cols-5 gap-2 max-h-48 overflow-y-auto pr-1" id="days-grid"></div>
         </div>
 
-        <!-- 4. Horários Disponíveis (09h às 22h) -->
+        <!-- 4. Horários Disponíveis -->
         <div class="space-y-2">
           <label class="text-xs font-semibold uppercase tracking-wider text-white">4. Horário Disponível (09h às 22h)</label>
-          <div class="grid grid-cols-4 gap-2 max-h-52 overflow-y-auto pr-1" id="slots-grid">
-            <!-- Gerado dinamicamente para garantir cliques destravados -->
-          </div>
+          <div class="grid grid-cols-4 gap-2 max-h-52 overflow-y-auto pr-1" id="slots-grid"></div>
         </div>
 
-        <!-- Formulário de Agendamento -->
+        <!-- Formulário -->
         <div class="space-y-3 pt-2">
           <input type="text" id="cust-name" placeholder="Seu Nome Completo" class="w-full bg-card border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-white outline-none">
           <input type="tel" id="cust-phone" placeholder="WhatsApp (DDD + Número)" class="w-full bg-card border border-gray-800 rounded-xl px-4 py-3 text-sm text-white focus:border-white outline-none">
@@ -228,7 +224,6 @@
       { id: 'platinado', nome: 'Platinado', preco: 200, tempo: 150 }
     ];
 
-    // Inicialização ao carregar a página
     window.addEventListener('DOMContentLoaded', () => {
       renderDays();
       renderSlots();
@@ -241,260 +236,4 @@
         const dayStr = String(i).padStart(2, '0');
         const btn = document.createElement('button');
         btn.className = 'day-btn p-2 rounded-xl bg-card border border-gray-800 text-gray-300 text-center';
-        btn.innerHTML = `<p class="text-[9px] font-bold">DIA</p><p class="text-xs font-bold">${dayStr}</p>`;
-        btn.onclick = () => {
-          document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('selected'));
-          btn.classList.add('selected');
-          selectedDayNumber = dayStr;
-        };
-        grid.appendChild(btn);
-      }
-    }
-
-    function renderSlots() {
-      const grid = document.getElementById('slots-grid');
-      grid.innerHTML = '';
-      timeslots.forEach(slot => {
-        const btn = document.createElement('button');
-        btn.className = 'slot-btn py-2 rounded-lg text-xs font-semibold bg-card border border-gray-800 text-gray-300';
-        btn.innerText = slot;
-        btn.onclick = () => {
-          document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
-          btn.classList.add('selected');
-          selectedSlotTime = slot;
-        };
-        grid.appendChild(btn);
-      });
-    }
-
-    function toggleService(id) {
-      const card = document.getElementById(`srv-${id}`);
-      if (!card) return;
-      const icon = card.querySelector('.srv-icon');
-      
-      if (selectedServices.includes(id)) {
-        selectedServices = selectedServices.filter(x => x !== id);
-        card.classList.remove('selected');
-        if (icon) icon.className = "fa-solid fa-circle text-gray-700 srv-icon";
-      } else {
-        selectedServices.push(id);
-        card.classList.add('selected');
-        if (icon) icon.className = "fa-solid fa-circle-check text-white srv-icon";
-      }
-    }
-
-    function requestGestorAccess() {
-      const pin = prompt("Digite a senha do barbeiro:");
-      if (pin === GESTOR_PIN) {
-        switchMode('gestor');
-      } else if (pin !== null) {
-        alert("Senha incorreta!");
-      }
-    }
-
-    function switchMode(mode) {
-      const clientView = document.getElementById('view-client');
-      const gestorView = document.getElementById('view-gestor');
-      const topBarberBtn = document.getElementById('top-barber-btn');
-      const gestorActions = document.getElementById('gestor-actions');
-      const footerBtn = document.getElementById('footer-btn');
-
-      if (mode === 'gestor') {
-        clientView.classList.add('hidden');
-        gestorView.classList.remove('hidden');
-        if (topBarberBtn) topBarberBtn.classList.add('hidden');
-        if (gestorActions) gestorActions.classList.remove('hidden');
-        if (footerBtn) footerBtn.classList.add('hidden');
-        
-        document.getElementById('gestor-date-input').value = new Date().toISOString().split('T')[0];
-        document.getElementById('share-link-input').value = window.location.href.split('?')[0];
-        document.getElementById('webhook-url-input').value = localStorage.getItem('inbarber_webhook_url') || '';
-        loadGestorData();
-      } else {
-        clientView.classList.remove('hidden');
-        gestorView.classList.add('hidden');
-        if (topBarberBtn) topBarberBtn.classList.remove('hidden');
-        if (gestorActions) gestorActions.classList.add('hidden');
-        if (footerBtn) footerBtn.classList.remove('hidden');
-      }
-    }
-
-    function logoutGestor() { switchMode('client'); }
-    function toggleGestorMenu() { document.getElementById('gestor-drawer').classList.toggle('hidden'); }
-    
-    function saveWebhookUrl() {
-      const url = document.getElementById('webhook-url-input').value.trim();
-      localStorage.setItem('inbarber_webhook_url', url);
-      alert('URL da API salva com sucesso!');
-      toggleGestorMenu();
-    }
-
-    function copyShareLink() {
-      const input = document.getElementById('share-link-input');
-      input.select();
-      document.execCommand('copy');
-      alert('Link copiado!');
-    }
-
-    function addCustomService() {
-      const name = document.getElementById('new-srv-name').value.trim();
-      const price = parseFloat(document.getElementById('new-srv-price').value);
-      const time = parseInt(document.getElementById('new-srv-time').value);
-
-      if (!name || isNaN(price) || isNaN(time)) {
-        alert('Preencha nome, preço e tempo do serviço.');
-        return;
-      }
-
-      const srvId = 'srv_' + Date.now();
-      servicosCatalog.push({ id: srvId, nome: name, preco: price, tempo: time });
-
-      const container = document.getElementById('services-container');
-      const newElem = document.createElement('div');
-      newElem.onclick = () => toggleService(srvId);
-      newElem.id = `srv-${srvId}`;
-      newElem.className = "srv-card p-3 rounded-xl bg-card border border-gray-800 cursor-pointer flex justify-between items-center transition-all";
-      newElem.innerHTML = `<div><p class="text-sm font-semibold text-white">${name}</p><p class="text-xs text-gray-400">${time} min • R$ ${price.toFixed(2)}</p></div><i class="fa-solid fa-circle text-gray-700 srv-icon"></i>`;
-      container.appendChild(newElem);
-
-      alert('Serviço adicionado!');
-      document.getElementById('new-srv-name').value = '';
-      document.getElementById('new-srv-price').value = '';
-      document.getElementById('new-srv-time').value = '';
-      toggleGestorMenu();
-    }
-
-    async function sendAutoWhatsappNotification(bookingData) {
-      const savedWebhook = localStorage.getItem('inbarber_webhook_url');
-      if (!savedWebhook) return;
-
-      let cleanPhone = bookingData.phone.replace(/\D/g, '');
-      if (!cleanPhone.startsWith('55')) { cleanPhone = '55' + cleanPhone; }
-
-      const payload = {
-        phone: cleanPhone,
-        message: `Olá ${bookingData.name}! Seu agendamento na InBarber foi confirmado para o dia ${bookingData.isoDate} às ${bookingData.slot}.`
-      };
-
-      try {
-        await fetch(savedWebhook, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-      } catch(e){}
-    }
-
-    async function confirmBooking() {
-      const name = document.getElementById('cust-name')?.value.trim();
-      const phone = document.getElementById('cust-phone')?.value.trim();
-
-      if (!name || !phone || !selectedDayNumber || !selectedSlotTime || selectedServices.length === 0) {
-        alert('Por favor, escolha o serviço, dia, horário e preencha seu nome e WhatsApp.');
-        return;
-      }
-
-      const now = new Date();
-      const isoDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${selectedDayNumber}`;
-
-      // Salvar localmente no navegador do gestor para garantir que apareça na lista
-      const newBooking = {
-        id: Date.now(),
-        cliente_nome: name,
-        cliente_whatsapp: phone,
-        servicos: selectedServices,
-        data: isoDate,
-        horario: selectedSlotTime,
-        valor_total: selectedServices.reduce((acc, curr) => acc + (servicosCatalog.find(s => s.id === curr)?.preco || 0), 0),
-        status: 'confirmado'
-      };
-
-      const existing = JSON.parse(localStorage.getItem('inbarber_local_bookings') || '[]');
-      existing.push(newBooking);
-      localStorage.setItem('inbarber_local_bookings', JSON.stringify(existing));
-
-      sendAutoWhatsappNotification({ name, phone, isoDate, slot: selectedSlotTime });
-      alert('Agendamento realizado com sucesso!');
-      window.location.reload();
-    }
-
-    function loadGestorData() {
-      const filterDate = document.getElementById('gestor-date-input').value;
-      const listContainer = document.getElementById('gestor-list');
-      const allBookings = JSON.parse(localStorage.getItem('inbarber_local_bookings') || '[]');
-
-      const dayBookings = allBookings.filter(b => b.data === filterDate);
-      const todayFat = dayBookings.reduce((acc, b) => acc + (b.valor_total || 0), 0);
-
-      document.getElementById('stat-count').innerText = dayBookings.length;
-      document.getElementById('stat-today-fat').innerText = `R$ ${todayFat},00`;
-
-      const weekFat = allBookings.reduce((acc, b) => acc + (b.valor_total || 0), 0);
-      document.getElementById('stat-week-count').innerText = allBookings.length;
-      document.getElementById('stat-week-fat').innerText = `R$ ${weekFat},00`;
-
-      if (dayBookings.length === 0) {
-        listContainer.innerHTML = '<p class="text-xs text-gray-500 text-center py-6">Nenhum agendamento para esta data.</p>';
-        return;
-      }
-
-      listContainer.innerHTML = dayBookings.map(b => {
-        const srvNames = (b.servicos || []).map(s => servicosCatalog.find(x => x.id === s)?.nome || s).join(', ');
-        const cleanPhone = (b.cliente_whatsapp || '').replace(/\D/g, '');
-        const msg = encodeURIComponent(`Olá ${b.cliente_nome}! Confirmando seu horário na InBarber hoje às ${b.horario}.`);
-
-        return `
-          <div class="p-3 bg-card rounded-xl border border-gray-800 space-y-2">
-            <div class="flex justify-between items-start">
-              <div>
-                <p class="text-sm font-bold text-white">${b.horario} - ${b.cliente_nome}</p>
-                <p class="text-xs text-gray-300">${b.cliente_whatsapp}</p>
-                <p class="text-xs text-gray-400 mt-0.5">${srvNames}</p>
-                <p class="text-xs font-semibold text-white mt-1">R$ ${b.valor_total},00</p>
-              </div>
-              <button onclick="deleteBooking(${b.id})" class="text-xs text-red-500"><i class="fa-solid fa-trash"></i></button>
-            </div>
-            ${cleanPhone ? `
-              <div class="pt-2 border-t border-gray-800 flex gap-2">
-                <a href="https://wa.me/55${cleanPhone}?text=${msg}" target="_blank" class="px-2.5 py-1 rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold">
-                  <i class="fa-brands fa-whatsapp"></i> WhatsApp
-                </a>
-              </div>
-            ` : ''}
-          </div>
-        `;
-      }).join('');
-    }
-
-    function deleteBooking(id) {
-      if (!confirm('Deseja excluir este agendamento?')) return;
-      let allBookings = JSON.parse(localStorage.getItem('inbarber_local_bookings') || '[]');
-      allBookings = allBookings.filter(b => b.id !== id);
-      localStorage.setItem('inbarber_local_bookings', JSON.stringify(allBookings));
-      loadGestorData();
-    }
-
-    function openBlockModal() {
-      const slotRange = prompt("Digite o intervalo para fechar a agenda (Ex: 14:00 - 21:30):");
-      if (!slotRange) return;
-      const filterDate = document.getElementById('gestor-date-input').value;
-
-      const newBooking = {
-        id: Date.now(),
-        cliente_nome: 'HORÁRIO BLOQUEADO',
-        cliente_whatsapp: '',
-        servicos: [],
-        data: filterDate,
-        horario: slotRange,
-        valor_total: 0,
-        status: 'bloqueado'
-      };
-
-      const existing = JSON.parse(localStorage.getItem('inbarber_local_bookings') || '[]');
-      existing.push(newBooking);
-      localStorage.setItem('inbarber_local_bookings', JSON.stringify(existing));
-      loadGestorData();
-    }
-  </script>
-</body>
-</html>
+        btn.innerHTML = `<p class="text-[9px] font-bold">DIA</p><p class
